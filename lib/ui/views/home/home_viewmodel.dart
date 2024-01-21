@@ -1,36 +1,38 @@
-import 'package:pml/app/app.bottomsheets.dart';
-import 'package:pml/app/app.dialogs.dart';
-import 'package:pml/app/app.locator.dart';
-import 'package:pml/ui/common/app_strings.dart';
+import 'package:flutter/material.dart';
+import 'package:pml/ui/views/albums/albums_view.dart';
+import 'package:pml/ui/views/concerts/concerts_view.dart';
+import 'package:pml/ui/views/home/home_view.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 
-class HomeViewModel extends BaseViewModel {
-  final _dialogService = locator<DialogService>();
-  final _bottomSheetService = locator<BottomSheetService>();
-
-  String get counterLabel => 'Counter is: $_counter';
-
-  int _counter = 0;
-
-  void incrementCounter() {
-    _counter++;
-    rebuildUi();
+class HomeViewModel extends IndexTrackingViewModel {
+  List<NavigationDestination> getMenu(BuildContext context) {
+    return [
+      const NavigationDestination(
+        icon: Icon(Icons.newspaper),
+        label: 'Actualités',
+      ),
+      const NavigationDestination(
+        icon: Icon(Icons.my_library_music_outlined),
+        label: 'Albums',
+      ),
+      const NavigationDestination(
+        icon: Icon(Icons.music_video_outlined),
+        label: 'Concerts',
+      ),
+    ];
   }
 
-  void showDialog() {
-    _dialogService.showCustomDialog(
-      variant: DialogType.infoAlert,
-      title: 'Stacked Rocks!',
-      description: 'Give stacked $_counter stars on Github',
-    );
-  }
-
-  void showBottomSheet() {
-    _bottomSheetService.showCustomSheet(
-      variant: BottomSheetType.notice,
-      title: ksHomeBottomSheetTitle,
-      description: ksHomeBottomSheetDescription,
-    );
+  Widget getView() {
+    switch (currentIndex) {
+      case 0:
+        return const HomeView();
+      case 1:
+        return const AlbumsView();
+      case 2:
+        return const ConcertsView();
+      case 3:
+      default:
+        return const HomeView();
+    }
   }
 }
